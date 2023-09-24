@@ -79,7 +79,7 @@
                         continue;
                     case "-rf":
                         operations.Add(Operation.ReadTable);
-                        readFileName = args[i + 1];
+                        //readFileName = args[i + 1];
                         continue;
                     default:
                         //Console.WriteLine("Unknown key ->" + args[i]) useless message;
@@ -121,7 +121,11 @@
                         Console.WriteLine(dbw.GetPivotTable());
                         break;
                     case Operation.ReadTable:
-                        dbw.UpdateTable(readFileName);
+                        using(DialogDVG dialogWindow = new DialogDVG(dbw, readFileName))
+                        {
+                            dialogWindow.ShowDialog();
+                        }
+                        //dbw.UpdateTable(readFileName);
                         break;
                     default:
                         break;

@@ -348,6 +348,24 @@ namespace SPCalc
             }
             return sb.ToString();
         }
+        public DataSet GetData()
+        {
+            DataSet dataSet = new DataSet();
+            using(SQLiteFactory sqf = new SQLiteFactory())
+            {
+                using (DbConnection dbc = sqf.CreateConnection())
+                {
+                    dbc.ConnectionString = this.dataBase.ConnectionString;
+                    dbc.Open();
+                    using (SQLiteDataAdapter sQLiteDataAdapter = new SQLiteDataAdapter(GetRequest(), (SQLiteConnection)dbc))
+                    {
+                        sQLiteDataAdapter.Fill(dataSet);
+                    }
+                    dbc.Close();
+                }
+            }
+            return dataSet;
+        }
         /// <summary>
         /// Method which gets pivot table from database, reads pivot table from user-input and compares students estimates. After that method updates old values. 
         /// </summary>
