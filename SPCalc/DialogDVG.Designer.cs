@@ -1,6 +1,6 @@
 ﻿namespace SPCalc
 {
-	partial class DialogDVG
+	public partial class DialogDVG
 	{
 		/// <summary>
 		/// Required designer variable.

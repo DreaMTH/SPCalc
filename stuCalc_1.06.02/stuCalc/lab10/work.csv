@@ -1,0 +1,10 @@
+# name  max  mustToDo  includeInFReport
+add     10    n        n      
+lab1    3     y        n      
+lab2    3     y        n      
+lab3    3     n        n      
+mod1T   5     y        y      #  theoretical questions
+mod1A   5     n        y      #  application
+mod2T   5     y        y      #  theoretical questions
+examT   5     y        y      
+examA   5     n        y      

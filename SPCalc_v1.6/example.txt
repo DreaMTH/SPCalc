@@ -1,0 +1,5 @@
+SPCalc.exe -ams st.txt
+SPCalc.exe -aws workss.txt
+SPCalc.exe -rf
+SPCalc.exe -as Mister
+SPCalc.exe -aw lab1.7 lab 5
