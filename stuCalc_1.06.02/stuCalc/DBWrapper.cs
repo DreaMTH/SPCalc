@@ -59,7 +59,8 @@ namespace testSpcAlc
 	                                            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 	                                            Name char(256),
 	                                            type char (4),
-	                                            max int
+	                                            max int,
+includeInFReport INTEGER DEFAULT 1
 		                                        CHECK(max > 3 and max < 6)
 		                                                                   );";
 			studentsTable = @"CREATE TABLE IF NOT EXISTS stds(
@@ -197,7 +198,7 @@ namespace testSpcAlc
 		/// <param name="workName">Name of the work</param>
 		/// <param name="workType">Type of the work(add, lab, mod)</param>
 		/// <param name="workMax">The max grade for work</param>
-		public void WorkAdd(string workName, string workType, int workMax)
+		public void WorkAdd(string workName, string workType, int workMax, int includeInFReport = 1)
 		{
 			using (SQLiteFactory sqf = new SQLiteFactory())
 			{
@@ -205,7 +206,7 @@ namespace testSpcAlc
 				{
 					dbc.ConnectionString = dataBase.ConnectionString;
 					dbc.Open();
-					string addCommand = $"INSERT INTO works('Name', 'type', 'max') VALUES('{workName}','{workType}',{workMax});";
+					string addCommand = $"INSERT INTO works('Name', 'type', 'includeInFReport','max') VALUES('{workName}','{workType}', {includeInFReport},{workMax});";
 					using (DbCommand cmd = new SQLiteCommand(addCommand, (SQLiteConnection)dbc))
 					{
 						cmd.ExecuteNonQuery();
@@ -307,7 +308,10 @@ namespace testSpcAlc
 					sb.Append(@"SELECT stds.id, stds.Name");
 					for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
 					{
-						sb.Append($"\n, SUM(CASE WHEN stds.id = result.student_id AND result.work_id = {i + 1} THEN result.estimate ELSE 0 END)'{ds.Tables[0].Rows[i][1].ToString().Trim()}'");
+						if (!ds.Tables[0].Rows[i][ds.Tables[0].Columns.Count - 1].ToString().Equals("0"))
+						{
+							sb.Append($"\n, SUM(CASE WHEN stds.id = result.student_id  AND result.work_id = {i + 1} THEN result.estimate ELSE 0 END)'{ds.Tables[0].Rows[i][1].ToString().Trim()}'");
+						}
 					}
 					sb.Append(@"FROM stds
 	                            JOIN result ON stds.id = result.student_id
@@ -373,6 +377,92 @@ namespace testSpcAlc
 			}
 			return dataSet;
 		}
-		
+		public DataSet GetWorks()
+		{
+			DataSet dataSet = new DataSet();
+			using (SQLiteFactory sqlf = new SQLiteFactory())
+			{
+				using (DbConnection dbc = sqlf.CreateConnection())
+				{
+					dbc.ConnectionString = this.dataBase.ConnectionString;
+					dbc.Open();
+					using (SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter("SELECT * FROM works;", (SQLiteConnection)dbc))
+					{
+						dataAdapter.Fill(dataSet);
+					}
+					dbc.Close();
+				}
+			}
+			return dataSet;
+		}
+		public void UpdateWorkName(string newName, string id)
+		{
+			using(SQLiteFactory sqf = new SQLiteFactory())
+			{
+				using(DbConnection dbc = sqf.CreateConnection())
+				{
+					dbc.ConnectionString = this.dataBase.ConnectionString;
+					dbc.Open();
+					string command = $"UPDATE works SET Name = '{newName}' WHERE id = {id};";
+					using(DbCommand com = new SQLiteCommand(command, (SQLiteConnection)dbc))
+					{
+						com.ExecuteNonQuery();
+					}
+					dbc.Close();
+				}
+			}
+		}
+		public void UpdateWorkMax(string max, string id)
+		{
+			using (SQLiteFactory sqf = new SQLiteFactory())
+			{
+				using (DbConnection dbc = sqf.CreateConnection())
+				{
+					dbc.ConnectionString = this.dataBase.ConnectionString;
+					dbc.Open();
+					string command = $"UPDATE works SET max = {max} WHERE id = {id};";
+					using (DbCommand com = new SQLiteCommand(command, (SQLiteConnection)dbc))
+					{
+						com.ExecuteNonQuery();
+					}
+					dbc.Close();
+				}
+			}
+		}
+		public void UpdateWorkType(string type, string id)
+		{
+			using (SQLiteFactory sqf = new SQLiteFactory())
+			{
+				using (DbConnection dbc = sqf.CreateConnection())
+				{
+					dbc.ConnectionString = this.dataBase.ConnectionString;
+					dbc.Open();
+					string command = $"UPDATE works SET type = '{type}' WHERE id = {id};";
+					using (DbCommand com = new SQLiteCommand(command, (SQLiteConnection)dbc))
+					{
+						com.ExecuteNonQuery();
+					}
+					dbc.Close();
+				}
+			}
+		}
+		public void UpdateWorkFRep(string value, string id)
+		{
+			using (SQLiteFactory sqf = new SQLiteFactory())
+			{
+				using (DbConnection dbc = sqf.CreateConnection())
+				{
+					dbc.ConnectionString = this.dataBase.ConnectionString;
+					dbc.Open();
+					string command = $"UPDATE works SET includeInFReport = {value} WHERE id = {id};";
+					using (DbCommand com = new SQLiteCommand(command, (SQLiteConnection)dbc))
+					{
+						com.ExecuteNonQuery();
+					}
+					dbc.Close();
+				}
+			}
+		}
+
 	}
 }

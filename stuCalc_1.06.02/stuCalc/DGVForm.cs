@@ -15,18 +15,15 @@ namespace testSpcAlc
 		private DataGridView dataGridView1;
 		private Panel panel2;
 		private Button SaveButton;
-		private bool isSaved { get; set; }
+		private bool isSaved { get; set; } = true;
 		private DataSet mainDatas { get; set; }
-		private string SaveFileName { get; set; }
 		private DbWrapper dbWrapper { get; set; }
-		public DGVForm(DbWrapper dbWrap, string fileName)
+		public DGVForm(DbWrapper dbWrap)
 		{
 			InitializeComponent();
-			this.mainDatas = dbWrap.GetData();
-			this.isSaved = true;
-			this.dbWrapper = new DbWrapper(dbWrap.dataBase);
+			mainDatas = dbWrap.GetData();
+			dbWrapper = new DbWrapper(dbWrap.dataBase);
 			DataGridInitializer();
-			SaveFileName = fileName;
 		}
 		private void DataGridInitializer()
 		{
@@ -104,7 +101,7 @@ namespace testSpcAlc
 				switch (response)
 				{
 					case DialogResult.Yes:
-						//logic
+						SaveButton.PerformClick();
 						break;
 					case DialogResult.No:
 						Console.WriteLine("Exit without changes...");
@@ -156,6 +153,6 @@ namespace testSpcAlc
 		{
 			this.isSaved = false;
 		}
-
+		
 	}
 }

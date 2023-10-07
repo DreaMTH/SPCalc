@@ -35,6 +35,7 @@ namespace testSpcAlc
 		public static string workId = "";
 		public static string estimate = "";
 		public static string readFileName = "";
+		public static string includeInFReport = "";
 		/// <summary>
 		/// start point.
 		/// </summary>
@@ -63,6 +64,7 @@ namespace testSpcAlc
 						workName = args[i + 1];
 						workType = args[i + 2];
 						workMax = args[i + 3];
+						includeInFReport = args[i + 4];
 						continue;
 					case "-amw":
 						operations.Add(Operation.MultipleAddWorks);
@@ -108,7 +110,11 @@ namespace testSpcAlc
 						dbw.StudentsAdd(stds);
 						break;
 					case Operation.AddWork:
-						dbw.WorkAdd(workName, workType, int.Parse(workMax));
+						using(WorksForm wf = new WorksForm(dbw))
+						{
+							wf.ShowDialog();
+						}
+						//dbw.WorkAdd(workName, workType, int.Parse(workMax), int.Parse(includeInFReport));
 						break;
 					case Operation.MultipleAddWorks:
 						string[] works;
@@ -127,11 +133,10 @@ namespace testSpcAlc
 						Console.WriteLine(dbw.GetPivotTable());
 						break;
 					case Operation.ReadTable:
-						using (DGVForm dialogWindow = new DGVForm(dbw, readFileName))
+						using (DGVForm dialogWindow = new DGVForm(dbw))
 						{
 							dialogWindow.ShowDialog();
 						}
-						//dbw.UpdateTable(readFileName);
 						break;
 					default:
 						break;
