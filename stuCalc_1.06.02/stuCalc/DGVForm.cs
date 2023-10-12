@@ -15,14 +15,15 @@ namespace testSpcAlc
 		private DataGridView dataGridView1;
 		private Panel panel2;
 		private Button SaveButton;
-		private bool isSaved { get; set; } = true;
+		private bool isSaved { get; set; }
 		private DataSet mainDatas { get; set; }
 		private DbWrapper dbWrapper { get; set; }
 		public DGVForm(DbWrapper dbWrap)
 		{
 			InitializeComponent();
-			mainDatas = dbWrap.GetData();
+			isSaved = true;
 			dbWrapper = new DbWrapper(dbWrap.dataBase);
+			mainDatas = dbWrapper.GetData();
 			DataGridInitializer();
 		}
 		private void DataGridInitializer()

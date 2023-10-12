@@ -14,7 +14,7 @@ namespace testSpcAlc
 		private Panel panel2;
 		private Button SaveWorksButton;
 		private Panel panel1;
-		private bool isSaved { get; set; } = true;
+		private bool isSaved { get; set; }
 		private DataSet mainDatas { get; set; }
 		private DbWrapper dbWrapper { get; set; }
 		private int NewRows { get; set; }
@@ -22,8 +22,9 @@ namespace testSpcAlc
 		{
 			InitializeComponent();
 			NewRows = 0;
-			mainDatas = dbWrap.GetWorks();
+			isSaved = true;
 			dbWrapper = new DbWrapper(dbWrap.dataBase);
+			mainDatas = dbWrapper.GetWorks();
 			DataGridInitializer();
 		}
 		private void DataGridInitializer()

@@ -1,7 +1,7 @@
 @echo off          
 set OUT=/out:a.exe
 set TRGT=/target:exe
-set RES=
+set RES=-r:System.Data.SQLite.dll
 set DBG=
 set LNGV=4
 
