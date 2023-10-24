@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Data.SQLite;
 using System.Data.Common;
@@ -25,7 +22,7 @@ namespace testSpcAlc
 		{
 			get
 			{
-				return "DataSource="+this.DbName;
+				return "DataSource=" + this.DbName;
 			}
 		}
 		/// <summary>
@@ -138,17 +135,17 @@ includeInFReport INTEGER DEFAULT 1
 				{
 					dbc.ConnectionString = dataBase.ConnectionString;
 					dbc.Open();
-					string addCommand = "INSERT OR IGNORE INTO stds('Name') VALUES('"+studentName+"');";
+					string addCommand = "INSERT OR IGNORE INTO stds('Name') VALUES('" + studentName + "');";
 					using (DbCommand cmd = new SQLiteCommand(addCommand, (SQLiteConnection)dbc))
 					{
 						cmd.ExecuteNonQuery();
 					}
-					string getNewId = "SELECT id FROM stds WHERE Name = '"+studentName+"'";
+					string getNewId = "SELECT id FROM stds WHERE Name = '" + studentName + "'";
 					using (DbCommand cmd = new SQLiteCommand(getNewId, (SQLiteConnection)dbc))
 					{
 						newId = int.Parse(cmd.ExecuteScalar().ToString());
 					}
-					string placeDefaultAdd = "INSERT INTO result('student_id', 'work_id', 'estimate') VALUES("+newId+", 1, 0.0);";
+					string placeDefaultAdd = "INSERT INTO result('student_id', 'work_id', 'estimate') VALUES(" + newId + ", 1, 0.0);";
 					using (DbCommand cmd = new SQLiteCommand(placeDefaultAdd, (SQLiteConnection)dbc))
 					{
 						cmd.ExecuteNonQuery();
@@ -172,17 +169,17 @@ includeInFReport INTEGER DEFAULT 1
 					dbc.Open();
 					for (int i = 0; i < studentsName.Length; ++i)
 					{
-						string addCommand = "INSERT INTO stds('Name') VALUES('"+studentsName[i]+"');";
+						string addCommand = "INSERT INTO stds('Name') VALUES('" + studentsName[i] + "');";
 						using (DbCommand cmd = new SQLiteCommand(addCommand, (SQLiteConnection)dbc))
 						{
 							cmd.ExecuteNonQuery();
 						}
-						string getNewId = "SELECT id FROM stds WHERE Name = '"+studentsName[i]+"'";
+						string getNewId = "SELECT id FROM stds WHERE Name = '" + studentsName[i] + "'";
 						using (DbCommand cmd = new SQLiteCommand(getNewId, (SQLiteConnection)dbc))
 						{
 							newId = int.Parse(cmd.ExecuteScalar().ToString());
 						}
-						string placeDefaultAdd = "INSERT INTO result('student_id', 'work_id', 'estimate') VALUES("+newId+", 1, 0.0);";
+						string placeDefaultAdd = "INSERT INTO result('student_id', 'work_id', 'estimate') VALUES(" + newId + ", 1, 0.0);";
 						using (DbCommand cmd = new SQLiteCommand(placeDefaultAdd, (SQLiteConnection)dbc))
 						{
 							cmd.ExecuteNonQuery();
@@ -206,7 +203,7 @@ includeInFReport INTEGER DEFAULT 1
 				{
 					dbc.ConnectionString = dataBase.ConnectionString;
 					dbc.Open();
-					string addCommand = "INSERT INTO works('Name', 'type', 'includeInFReport','max') VALUES('"+workName+"','"+workType+"', "+includeInFReport+","+workMax+");";
+					string addCommand = "INSERT INTO works('Name', 'type', 'includeInFReport','max') VALUES('" + workName + "','" + workType + "', " + includeInFReport + "," + workMax + ");";
 					using (DbCommand cmd = new SQLiteCommand(addCommand, (SQLiteConnection)dbc))
 					{
 						cmd.ExecuteNonQuery();
@@ -231,7 +228,7 @@ includeInFReport INTEGER DEFAULT 1
 					dbc.Open();
 					for (int i = 0; i < worksName.Length; ++i)
 					{
-						string addCommand = "INSERT INTO works('Name', 'type', 'max') VALUES('"+worksName[i]+"','"+worksTypes[i]+"',"+worksMax[i]+");";
+						string addCommand = "INSERT INTO works('Name', 'type', 'max') VALUES('" + worksName[i] + "','" + worksTypes[i] + "'," + worksMax[i] + ");";
 						using (DbCommand cmd = new SQLiteCommand(addCommand, (SQLiteConnection)dbc))
 						{
 							cmd.ExecuteNonQuery();
@@ -256,7 +253,7 @@ includeInFReport INTEGER DEFAULT 1
 				{
 					dbc.ConnectionString = dataBase.ConnectionString;
 					dbc.Open();
-					string InsertCommand = "INSERT INTO result('student_id', 'work_id', 'estimate') VALUES("+studentId+", "+workId+", "+estimate+")";
+					string InsertCommand = "INSERT INTO result('student_id', 'work_id', 'estimate') VALUES(" + studentId + ", " + workId + ", " + estimate + ")";
 					using (DbCommand cmd = new SQLiteCommand(InsertCommand, (SQLiteConnection)dbc))
 					{
 						cmd.ExecuteNonQuery();
@@ -279,7 +276,7 @@ includeInFReport INTEGER DEFAULT 1
 				{
 					dbc.ConnectionString = dataBase.ConnectionString;
 					dbc.Open();
-					string UpdatingCommand = "UPDATE result SET estimate = "+estimate+"WHERE student_id = "+studentId+ "AND work_id ="+workId+";";
+					string UpdatingCommand = "UPDATE result SET estimate = " + estimate + " WHERE student_id = " + studentId + " AND work_id =" + workId + ";";
 					using (DbCommand cmd = new SQLiteCommand(UpdatingCommand, (SQLiteConnection)dbc))
 					{
 						cmd.ExecuteNonQuery();
@@ -305,13 +302,11 @@ includeInFReport INTEGER DEFAULT 1
 					SQLiteDataAdapter sqlda = new SQLiteDataAdapter("select * from works;", (SQLiteConnection)dbc);
 					DataSet ds = new DataSet();
 					sqlda.Fill(ds);
-					sb.Append(@"SELECT stds.id, stds.Name");
+					sb.Append(@"SELECT stds.id AS Id, stds.Name AS Name");
 					for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
 					{
-						if (!ds.Tables[0].Rows[i][ds.Tables[0].Columns.Count - 1].ToString().Equals("0"))
-						{
-							sb.Append("\n, SUM(CASE WHEN stds.id = result.student_id  AND result.work_id = "+(i + 1)+" THEN result.estimate ELSE 0 END)'"+ds.Tables[0].Rows[i][1].ToString().Trim()+"'");
-						}
+						sb.Append("\n, SUM(CASE WHEN stds.id = result.student_id  AND result.work_id = " + (i + 1) + " THEN result.estimate ELSE 0 END)'" + ds.Tables[0].Rows[i][1].ToString().Trim() + "'");
+
 					}
 					sb.Append(@"FROM stds
 	                            JOIN result ON stds.id = result.student_id
@@ -340,7 +335,7 @@ includeInFReport INTEGER DEFAULT 1
 					sQLiteDataAdapter.Fill(dataSet);
 					for (int i = 0; i < dataSet.Tables[0].Columns.Count; i++)
 					{
-						sb.Append(dataSet.Tables[0].Columns[i].ColumnName.Trim()+"\t");
+						sb.Append(dataSet.Tables[0].Columns[i].ColumnName.Trim() + "\t");
 					}
 					sb.Remove(sb.Length - 1, 1);
 					sb.AppendLine();
@@ -348,7 +343,7 @@ includeInFReport INTEGER DEFAULT 1
 					{
 						for (int j = 0; j < dataSet.Tables[0].Columns.Count; j++)
 						{
-							sb.Append(dataSet.Tables[0].Rows[i][j].ToString().Trim()+"\t");
+							sb.Append(dataSet.Tables[0].Rows[i][j].ToString().Trim() + "\t");
 						}
 						sb.Remove(sb.Length - 1, 1);
 						sb.AppendLine();
@@ -397,14 +392,14 @@ includeInFReport INTEGER DEFAULT 1
 		}
 		public void UpdateWorkName(string newName, string id)
 		{
-			using(SQLiteFactory sqf = new SQLiteFactory())
+			using (SQLiteFactory sqf = new SQLiteFactory())
 			{
-				using(DbConnection dbc = sqf.CreateConnection())
+				using (DbConnection dbc = sqf.CreateConnection())
 				{
 					dbc.ConnectionString = this.dataBase.ConnectionString;
 					dbc.Open();
-					string command = "UPDATE works SET Name = '"+newName+"' WHERE id = "+id+";";
-					using(DbCommand com = new SQLiteCommand(command, (SQLiteConnection)dbc))
+					string command = "UPDATE works SET Name = '" + newName + "' WHERE id = " + id + ";";
+					using (DbCommand com = new SQLiteCommand(command, (SQLiteConnection)dbc))
 					{
 						com.ExecuteNonQuery();
 					}
@@ -420,7 +415,7 @@ includeInFReport INTEGER DEFAULT 1
 				{
 					dbc.ConnectionString = this.dataBase.ConnectionString;
 					dbc.Open();
-					string command = "UPDATE works SET max = "+max+" WHERE id = "+id+";";
+					string command = "UPDATE works SET max = " + max + " WHERE id = " + id + ";";
 					using (DbCommand com = new SQLiteCommand(command, (SQLiteConnection)dbc))
 					{
 						com.ExecuteNonQuery();
@@ -437,7 +432,7 @@ includeInFReport INTEGER DEFAULT 1
 				{
 					dbc.ConnectionString = this.dataBase.ConnectionString;
 					dbc.Open();
-					string command = "UPDATE works SET type = '"+type+"' WHERE id = "+id+";";
+					string command = "UPDATE works SET type = '" + type + "' WHERE id = " + id + ";";
 					using (DbCommand com = new SQLiteCommand(command, (SQLiteConnection)dbc))
 					{
 						com.ExecuteNonQuery();
@@ -454,7 +449,7 @@ includeInFReport INTEGER DEFAULT 1
 				{
 					dbc.ConnectionString = this.dataBase.ConnectionString;
 					dbc.Open();
-					string command = "UPDATE works SET includeInFReport = "+value+" WHERE id = "+id+";";
+					string command = "UPDATE works SET includeInFReport = " + value + " WHERE id = " + id + ";";
 					using (DbCommand com = new SQLiteCommand(command, (SQLiteConnection)dbc))
 					{
 						com.ExecuteNonQuery();
@@ -462,6 +457,31 @@ includeInFReport INTEGER DEFAULT 1
 					dbc.Close();
 				}
 			}
+		}
+		public DataSet GetPivotEstimates()
+		{
+			string query = @"SELECT stds.id AS ID, stds.name as Name
+	,SUM(CASE WHEN stds.id = result.student_id AND works.includeInFReport != 0 THEN result.estimate ELSE 0 END)'RES'
+	FROM stds
+	JOIN result ON stds.id = result.student_id
+	JOIN works ON result.work_id = works.id
+	GROUP BY stds.id
+	ORDER BY RES DESC;";
+			DataSet dataSet = new DataSet();
+			using (SQLiteFactory sqf = new SQLiteFactory())
+			{
+				using (DbConnection dbc = sqf.CreateConnection())
+				{
+					dbc.ConnectionString = this.dataBase.ConnectionString;
+					dbc.Open();
+					using (SQLiteDataAdapter sQLiteDataAdapter = new SQLiteDataAdapter(query, (SQLiteConnection)dbc))
+					{
+						sQLiteDataAdapter.Fill(dataSet);
+					}
+					dbc.Close();
+				}
+			}
+			return dataSet;
 		}
 
 	}

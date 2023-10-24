@@ -58,7 +58,7 @@ namespace testSpcAlc
 		{
 			this.isSaved = true;
 			var compareData = dbWrapper.GetWorks().Tables[0];
-			for(int i = 0; i < mainDatas.Tables[0].Rows.Count - 1; i++)
+			for(int i = 0; i < compareData.Rows.Count; i++)
 			{
 				for(int j = 1; j < mainDatas.Tables[0].Columns.Count; j++)
 				{

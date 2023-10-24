@@ -15,6 +15,7 @@ namespace testSpcAlc
 		AddGrade,
 		UpdateGrade,
 		PrintTable,
-		ReadTable
+		ReadTable,
+		ResultTable
 	}
 }

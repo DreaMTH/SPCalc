@@ -1,0 +1,7 @@
+SELECT stds.id AS ID, stds.name as Name
+	,SUM(CASE WHEN stds.id = result.student_id AND works.includeInFReport != 0 THEN result.estimate ELSE 0 END)'RES'
+	FROM stds
+	JOIN result ON stds.id = result.student_id
+	JOIN works ON result.work_id = works.id
+	GROUP BY stds.id
+	ORDER BY RES DESC;

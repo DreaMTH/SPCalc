@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.CompilerServices;
+
 namespace testSpcAlc
 {
 	class MainClass
@@ -42,7 +44,7 @@ namespace testSpcAlc
 		/// <param name="args">use -? to recive information about args(keys)</param>
 		static void Main(string[] args)
 		{
-
+			System.Globalization.CultureInfo.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
 			List<Operation> operations = new List<Operation>();
 			for (int i = 0; i < args.Length; i++)
 			{
@@ -61,10 +63,6 @@ namespace testSpcAlc
 						continue;
 					case "-aw":
 						operations.Add(Operation.AddWork);
-						workName = args[i + 1];
-						workType = args[i + 2];
-						workMax = args[i + 3];
-						includeInFReport = args[i + 4];
 						continue;
 					case "-amw":
 						operations.Add(Operation.MultipleAddWorks);
@@ -89,12 +87,16 @@ namespace testSpcAlc
 						operations.Add(Operation.ReadTable);
 						//readFileName = args[i + 1];
 						continue;
+					case "-rt":
+						operations.Add(Operation.ResultTable);
+						continue;
 					default:
 						//Console.WriteLine("Unknown key ->" + args[i]) useless message;
 						continue;
 				}
 			}
 			//operations.Add(Operation.PrintTable); //test func
+			
 			DB dB = new DB("foo.db"); //ALWAYS use this constructor or programm would not work.
 			DbWrapper dbw = new DbWrapper(dB);
 			for (int i = 0; i < operations.Count; i++)
@@ -136,6 +138,12 @@ namespace testSpcAlc
 						using (DGVForm dialogWindow = new DGVForm(dbw))
 						{
 							dialogWindow.ShowDialog();
+						}
+						break;
+					case Operation.ResultTable:
+						using(ResultForm rf = new ResultForm(dbw.GetPivotEstimates()))
+						{
+							rf.ShowDialog();
 						}
 						break;
 					default:
