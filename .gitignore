@@ -11,7 +11,7 @@ SPCalc_v1.6/
 *.user
 *.userosscache
 *.sln.docstates
-
+*.zip
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

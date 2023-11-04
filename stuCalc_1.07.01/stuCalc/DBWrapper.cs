@@ -50,7 +50,7 @@ namespace testSpcAlc
 	                                            estimate DOUBLE,
 	                                            FOREIGN KEY(student_id) REFERENCES stds(id),
 	                                            FOREIGN KEY(work_id) REFERENCES works(id),
-	                                            CHECK(estimate < 6.0)
+	                                            
 	                                            );";
 			worksTable = @"CREATE TABLE IF NOT EXISTS works(
 	                                            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -58,7 +58,6 @@ namespace testSpcAlc
 	                                            type char (4),
 	                                            max int,
 includeInFReport INTEGER DEFAULT 1
-		                                        CHECK(max > 3 and max < 6)
 		                                                                   );";
 			studentsTable = @"CREATE TABLE IF NOT EXISTS stds(
 	                                            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -305,7 +304,7 @@ includeInFReport INTEGER DEFAULT 1
 					sb.Append(@"SELECT stds.id AS Id, stds.Name AS Name");
 					for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
 					{
-						sb.Append("\n, SUM(CASE WHEN stds.id = result.student_id  AND result.work_id = " + (i + 1) + " THEN result.estimate ELSE 0 END)'" + ds.Tables[0].Rows[i][1].ToString().Trim() + "'");
+						sb.Append("\n, SUM(CASE WHEN stds.id = result.student_id  AND result.work_id = " + (i + 1) + " THEN result.estimate ELSE 0.0 END)'" + ds.Tables[0].Rows[i][1].ToString().Trim() + "'");
 
 					}
 					sb.Append(@"FROM stds

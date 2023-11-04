@@ -1,4 +1,0 @@
-id	Name	Add	Lab1.1	Lab1.2	lab1.3	lab1.4	Mod1
-1	Apanasov Danil	3	0	0	0	0	0
-2	Eshe Ktoto	0	0	0	0	0	0
-3	Nikto Navernoe	0	0	0	0	0	0

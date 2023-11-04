@@ -173,9 +173,15 @@ namespace testSpcAlc
 			workName = new string[lines.Length];
 			workType = new string[lines.Length];
 			max = new int[lines.Length];
+			string[] separatos = { " ", "\t" };
 			for (int i = 0; i < lines.Length; i++)
 			{
-				string[] tmp = lines[i].Split(' ');
+				if (lines[i].Length < 3)
+				{
+					//wrong line
+					break;
+				}
+				string[] tmp = lines[i].Split(separatos, StringSplitOptions.RemoveEmptyEntries);
 				workName[i] = tmp[0].Trim();
 				workType[i] = tmp[1].Trim();
 				max[i] = int.Parse(tmp[2].Trim());
